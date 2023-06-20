@@ -68,7 +68,6 @@ def main():
 
     print(total)
 
-
 # ## What happens?
 #
 # When you do `.call` on function `f`, Modal will execute `f` **in the cloud,**
@@ -101,3 +100,30 @@ def main():
 #
 # Modal lets you parallelize that operation trivially by running hundreds or
 # thousands of containers in the cloud.
+
+exit() # 萬一從 terminal 執行，到此為止。下面是用 Jupyter lab 執行的實驗。
+
+# {GitHub}/modal-examples/01_getting_started/hello_world.py
+# 在 JupyterLab 中用 scratchpad 方式執行的方式是 with stub.run() 如下： 
+
+    with stub.run():
+        # Call the function locally.
+        print(f(1000))
+
+        # Call the function remotely.
+        print(f.call(1000))
+
+        # Parallel map.
+        total = 0
+        for ret in f.map(range(20)):
+            total += ret
+
+        print(total)
+
+# .map() 發動的 f() function 是 20 個同時撒下去，最後的 print 一定有印出完整的 list 可是
+# 看起來卻先於某些 f() 這表示那些 f() 已經 return 了，可是 I/O 還在非同步地各自執行。光這點
+# 就證明了 .map() 真的是 paralelle 的！
+
+    with stub.run():
+        arr = list(f.map(range(20)))
+        print(arr)
